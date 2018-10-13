@@ -1,0 +1,10 @@
+
+# IDE directories
+/.idea/
+
+# Python precompiled files
+__pycache__/
+*.pyc
+
+# VirtualEnv
+/venv/
