@@ -155,6 +155,39 @@ else:
         ]
 
 
+try:
+    import rdrand as _rdrand
+
+except ImportError:
+    _rdrand = None
+
+else:
+    if _rdrand.HAS_RAND:
+        PROVIDERS += [_Provider(
+                precedence=19,
+                name='rdrand',
+                cls=_rdrand.RdRandom,
+                flags=(
+                        ProviderFlag.NEVER_BLOCKING |
+                        ProviderFlag.FAST |
+                        ProviderFlag.CRYPTOGRAPHICALLY_SECURE
+                ),
+        )]
+
+    if _rdrand.HAS_SEED:
+        PROVIDERS += [_Provider(
+                precedence=69,
+                name='rdseed',
+                cls=_rdrand.RdSeedom,
+                flags=(
+                        ProviderFlag.NONDETERMINISTIC |
+                        ProviderFlag.NEVER_BLOCKING |
+                        ProviderFlag.CRYPTOGRAPHICALLY_SECURE |
+                        ProviderFlag.CRYPTOGRAPHICALLY_STRONG
+                ),
+        )]
+
+
 def get_range(context: _random.Random, low: int, high: int, k: int,
               inverted=False) -> _List:
     population = range(low, high + 1)
