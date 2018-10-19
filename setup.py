@@ -145,8 +145,9 @@ if __name__ == '__main__':
             python_requires='>=3.6',
             install_requires=[
             ],
-            # extras_require={
-            #     },
+            extras_require={
+                'rdrand': ['rdrand'],
+            },
             test_suite='tests',
             py_modules=[
                 'randomness',
