@@ -8,3 +8,9 @@ __pycache__/
 
 # VirtualEnv
 /venv/
+
+# setuptools stuff
+/build/
+/dist/
+/*.dist-info/
+/*.egg-info/
