@@ -1,23 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import (
-    Any as _Any,
-    Iterable as _Iterable,
-    List as _List,
-)
+from typing import Any as _Any
 
 import enum as _enum
 import os as _os
 import random as _random
 
 from collections import namedtuple as _namedtuple
-
-__all__ = [
-    'ProviderFlag',
-    'PROVIDERS',
-    'get_range',
-]
 
 
 class ProviderFlag(_enum.Flag):
@@ -188,42 +178,4 @@ else:
         )]
 
 
-def get_range(context: _random.Random, low: int, high: int, k: int,
-              inverted=False) -> _List:
-    population = range(low, high + 1)
-
-    if inverted:
-        k = len(population) - k
-
-    sample = context.sample(population, k)
-
-    if not inverted:
-        return sample
-
-    remainder = set(population)
-    remainder.difference_update(sample)
-    return sorted(remainder)
-
-
 PROVIDERS.sort(reverse=True)
-
-
-if __name__ == '__main__':
-    def _test(providers: _Iterable[_Provider]) -> None:
-        import sys
-
-        for provider in providers:
-            print(f"\n{provider.name}:\n", file=sys.stderr, flush=True)
-
-            random = provider.cls()
-
-            for expression in [
-                'random.getrandbits(4096).bit_length()',
-                'random.random()',
-                'random.randint(-11, -10)',
-                'random.randrange(16)',
-            ]:
-                print(f"{expression} = {eval(expression)!r}",
-                      file=sys.stderr, flush=True)
-
-    _test(PROVIDERS)
