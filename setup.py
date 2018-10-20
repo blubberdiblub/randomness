@@ -164,7 +164,7 @@ def get_long_description(filename='README.md'):
     try:
         process = subprocess.Popen([
                 'pandoc',
-                '-f', 'markdown_github',
+                '-f', 'gfm',
                 '-t', 'rst',
             ],
             stdin=subprocess.PIPE,
