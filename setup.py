@@ -12,24 +12,97 @@ from os import chdir
 from os.path import dirname
 from setuptools import setup, find_packages
 
+import packaging.version
+
+
+class Version(packaging.version.Version):
+
+    def _build_new(self, *extra: str) -> 'Version':
+
+        parts = [self.base_version]
+
+        if self.pre:
+            parts.extend(str(part) for part in self.pre)
+
+        parts.extend(extra)
+
+        return self.__class__(''.join(parts))
+
+    def _build_with_local(self, *extra: str) -> 'Version':
+
+        if not self.local:
+            return self._build_new(*extra)
+
+        return self._build_new(*extra, '+', self.local)
+
+    def get_base_and_pre(self) -> 'Version':
+
+        return self._build_new()
+
+    def replace_post(self, post: int) -> 'Version':
+
+        if int(post) != post:
+            raise TypeError("post must be integral")
+
+        post = int(post)
+        if post <= 0:
+            raise ValueError("post must be greater than zero")
+
+        return self._build_with_local('.post', str(post))
+
+    def replace_dev(self, dev: int) -> 'Version':
+
+        if int(dev) != dev:
+            raise TypeError("dev must be integral")
+
+        dev = int(dev)
+        if dev <= 0:
+            raise ValueError("dev must be greater than zero")
+
+        extra = ['.post', str(self.post)] if self.post is not None else []
+
+        return self._build_with_local(*extra, '.dev', str(dev))
+
+    def extend_local(self, *extra_local: str) -> 'Version':
+
+        extra = []
+
+        if self.post is not None:
+            extra += ['.post', str(self.post)]
+
+        if self.dev is not None:
+            extra += ['.dev', str(self.dev)]
+
+        local = []
+
+        if self.local:
+            local += [self.local]
+
+        for part in extra_local:
+            if part:
+                local += [part]
+
+        if local:
+            extra += ['+', '.'.join(local)]
+
+        return self._build_new(*extra)
+
 
 def get_version(filename='version.py'):
     """Build version number from git repository tag."""
 
     try:
-        f = open(filename, 'r')
+        with open(filename, 'r') as f:
+            version_file_content = f.read()
 
-    except IOError as e:
-        if e.errno != errno.ENOENT:
-            raise
-
+    except FileNotFoundError:
         m = None
 
     else:
-        m = re.match(r'^\s*__version__\s*=\s*(?P<version>.*)$', f.read(), re.M)
-        f.close()
+        m = re.match(r'^\s*__version__\s*=\s*(?P<version>.*)$',
+                     version_file_content, re.M)
 
-    __version__ = literal_eval(m.group('version')) if m else None
+    __version__ = Version(literal_eval(m.group('version'))) if m else None
 
     try:
         git_version = subprocess.check_output(['git',
@@ -43,39 +116,44 @@ def get_version(filename='version.py'):
         if __version__ is None:
             raise ValueError("cannot determine version number")
 
-        return __version__
+        return str(__version__)
 
     m = re.match(r'^\s*'
                  r'(?P<version>\S+?)'
-                 r'(-(?P<post>\d+)-(?P<commit>g[0-9a-f]+))?'
+                 r'(-(?P<increment>\d+)-(?P<commit>g[0-9a-f]+))?'
                  r'(-(?P<dirty>dirty))?'
                  r'\s*$', git_version)
     if not m:
         raise ValueError("cannot parse git describe output")
 
-    git_version = m.group('version')
-    post = m.group('post')
+    git_version = Version(m.group('version'))
+    increment = m.group('increment')
     commit = m.group('commit')
     dirty = m.group('dirty')
 
-    local = []
+    if increment and int(increment) != 0:
+        increment = int(increment)
 
-    if post and int(post) != 0:
-        git_version += '.post%d' % (int(post),)
-        if commit:
-            local.append(commit)
+        if (__version__ is not None and
+                __version__.get_base_and_pre() >
+                git_version.get_base_and_pre()):
+            git_version = __version__.replace_dev(increment)
+
+        else:
+            git_version = git_version.replace_post(increment)
 
     if dirty:
-        local.append(dirty)
+        if commit:
+            git_version = git_version.extend_local(commit, dirty)
 
-    if local:
-        git_version += '+' + '.'.join(local)
+        else:
+            git_version = git_version.extend_local(dirty)
 
-    if git_version != __version__:
+    if __version__ is None or git_version != __version__:
         with open(filename, 'w') as f:
-            f.write("__version__ = %r\n" % (git_version,))
+            f.write('__version__ = {!r}\n'.format(str(git_version)))
 
-    return git_version
+    return str(git_version)
 
 
 def get_long_description(filename='README.md'):
@@ -140,7 +218,8 @@ if __name__ == '__main__':
             url='https://github.com/blubberdiblub/randomness',
             project_urls={
                 'Source': 'https://github.com/blubberdiblub/randomness',
-                'Tracker': 'https://github.com/blubberdiblub/randomness/issues',
+                'Tracker':
+                    'https://github.com/blubberdiblub/randomness/issues',
             },
             python_requires='>=3.6',
             install_requires=[
