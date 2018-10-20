@@ -63,7 +63,7 @@ class Version(packaging.version.Version):
 
         return self._build_with_local(*extra, '.dev', str(dev))
 
-    def extend_local(self, *extra_local: str) -> 'Version':
+    def replace_local(self, *local: str) -> 'Version':
 
         extra = []
 
@@ -73,15 +73,7 @@ class Version(packaging.version.Version):
         if self.dev is not None:
             extra += ['.dev', str(self.dev)]
 
-        local = []
-
-        if self.local:
-            local += [self.local]
-
-        for part in extra_local:
-            if part:
-                local += [part]
-
+        local = [part for part in local if part]
         if local:
             extra += ['+', '.'.join(local)]
 
@@ -142,16 +134,16 @@ def get_version(filename='version.py'):
         else:
             git_version = git_version.replace_post(increment)
 
-    if dirty:
-        if commit:
-            git_version = git_version.extend_local(commit, dirty)
-
-        else:
-            git_version = git_version.extend_local(dirty)
-
     if __version__ is None or git_version != __version__:
         with open(filename, 'w') as f:
             f.write('__version__ = {!r}\n'.format(str(git_version)))
+
+    if dirty:
+        if commit:
+            git_version = git_version.replace_local(commit, dirty)
+
+        else:
+            git_version = git_version.replace_local(dirty)
 
     return str(git_version)
 
