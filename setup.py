@@ -3,7 +3,6 @@
 
 """Setup for randomness."""
 
-import errno
 import re
 import subprocess
 
@@ -149,43 +148,14 @@ def get_version(filename='version.py'):
 
 
 def get_long_description(filename='README.md'):
-    """Convert description to reStructuredText format."""
+    """Read long description from file."""
 
     try:
         with open(filename, 'r') as f:
             description = f.read()
 
-    except OSError as e:
-        if e.errno != errno.ENOENT:
-            raise
-
+    except FileNotFoundError:
         return None
-
-    try:
-        process = subprocess.Popen([
-                'pandoc',
-                '-f', 'gfm',
-                '-t', 'rst',
-            ],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            universal_newlines=True,
-            )
-
-    except OSError as e:
-        if e.errno == errno.ENOENT:
-            return None
-
-        raise
-
-    description, __ = process.communicate(input=description)
-
-    if process.poll() is None:
-        process.kill()
-        raise Exception("pandoc did not terminate")
-
-    if process.poll():
-        raise Exception("pandoc terminated abnormally")
 
     return description
 
@@ -200,6 +170,7 @@ if __name__ == '__main__':
             description="Provide several randomness sources"
                         " in Python with a common API",
             long_description=get_long_description(),
+            long_description_content_type='text/markdown',
             license='MIT',
             keywords=[
                 'randomness',
