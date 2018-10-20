@@ -214,27 +214,22 @@ if __name__ == '__main__':
                     'https://github.com/blubberdiblub/randomness/issues',
             },
             python_requires='>=3.6',
+            setup_requires=[
+                'packaging',
+            ],
             install_requires=[
             ],
             extras_require={
                 'rdrand': ['rdrand'],
             },
             test_suite='tests',
-            py_modules=[
-                'randomness',
-            ],
-            # packages=find_packages(exclude=[
-            #     'tests',
-            #     'tests.*',
-            #     '*.tests',
-            #     '*.tests.*',
-            # ]),
-            include_package_data=True,
-            zip_safe=False,
-            # entry_points={
-            #     'console_scripts': [
-            #     ],
-            # },
+            packages=find_packages(exclude=[
+                'tests',
+                'tests.*',
+                '*.tests',
+                '*.tests.*',
+            ]),
+            zip_safe=True,
             classifiers=[
                 'Development Status :: 3 - Alpha',
                 'Intended Audience :: Developers',
