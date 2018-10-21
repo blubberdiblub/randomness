@@ -10,7 +10,14 @@ __pycache__/
 /venv/
 
 # setuptools stuff
+/.eggs/
 /build/
 /dist/
 /*.dist-info/
 /*.egg-info/
+
+# automatically generated version files
+_version.py
+
+# temporary test files
+/.pytest_cache/
