@@ -1,1 +1,1 @@
-packaging
+setuptools_scm
