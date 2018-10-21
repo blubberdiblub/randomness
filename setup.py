@@ -192,6 +192,7 @@ if __name__ == '__main__':
             ],
             extras_require={
                 'rdrand': ['rdrand'],
+                'test': ['pytest'],
             },
             test_suite='tests',
             packages=find_packages(exclude=[
