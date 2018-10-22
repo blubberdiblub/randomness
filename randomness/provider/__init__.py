@@ -153,36 +153,46 @@ else:
 
 
 try:
-    import rdrand as _rdrand
+    from .rdrandseed import RdRand
 
 except ImportError:
-    _rdrand = None
+    pass
 
 else:
-    if _rdrand.HAS_RAND:
-        PROVIDERS += [_Provider(
-                precedence=19,
-                name='rdrand',
-                cls=_rdrand.RdRandom,
-                flags=(
-                        Flag.NEVER_BLOCKING |
-                        Flag.FAST |
-                        Flag.CRYPTOGRAPHICALLY_SECURE
-                ),
-        )]
+    PROVIDERS += [_Provider(
+            precedence=19,
+            name='rdrand',
+            cls=RdRand,
+            flags=(
+                    Flag.NEVER_BLOCKING |
+                    Flag.FAST |
+                    Flag.CRYPTOGRAPHICALLY_SECURE
+            ),
+    )]
 
-    if _rdrand.HAS_SEED:
-        PROVIDERS += [_Provider(
-                precedence=69,
-                name='rdseed',
-                cls=_rdrand.RdSeedom,
-                flags=(
-                        Flag.NONDETERMINISTIC |
-                        Flag.NEVER_BLOCKING |
-                        Flag.CRYPTOGRAPHICALLY_SECURE |
-                        Flag.CRYPTOGRAPHICALLY_STRONG
-                ),
-        )]
+    __all__ += ['RdRand']
+
+
+try:
+    from .rdrandseed import RdSeed
+
+except ImportError:
+    pass
+
+else:
+    PROVIDERS += [_Provider(
+            precedence=69,
+            name='rdseed',
+            cls=RdSeed,
+            flags=(
+                    Flag.NONDETERMINISTIC |
+                    Flag.NEVER_BLOCKING |
+                    Flag.CRYPTOGRAPHICALLY_SECURE |
+                    Flag.CRYPTOGRAPHICALLY_STRONG
+            ),
+    )]
+
+    __all__ += ['RdSeed']
 
 
 PROVIDERS.sort(reverse=True)
