@@ -50,6 +50,8 @@ else:
             ),
     )]
 
+    __all__ += ['MersenneTwister']
+
 
 try:
     from random import SystemRandom
@@ -64,6 +66,8 @@ else:
             cls=SystemRandom,
             flags=Flag(0),
     )]
+
+    __all__ += ['SystemRandom']
 
 
 try:
@@ -84,6 +88,8 @@ else:
                     Flag.SEEDABLE
             ),
     )]
+
+    __all__ += ['JKiss']
 
 
 try:
