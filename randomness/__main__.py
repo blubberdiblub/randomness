@@ -17,8 +17,9 @@ def _test(providers: _Iterable[_Provider]) -> None:
         for expression in [
             'random.getrandbits(4096).bit_length()',
             'random.random()',
-            'random.randint(-11, -10)',
+            'random.randint(-15, -1)',
             'random.randrange(16)',
+            'random.randint(16, 32)',
         ]:
             print(f"{expression} = {eval(expression)!r}",
                   file=sys.stderr, flush=True)
