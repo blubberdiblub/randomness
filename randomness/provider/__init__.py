@@ -31,6 +31,7 @@ __all__ = [
 
 
 try:
+    # noinspection PyUnresolvedReferences
     from random import Random as MersenneTwister
 
 except ImportError:
@@ -54,6 +55,7 @@ else:
 
 
 try:
+    # noinspection PyUnresolvedReferences
     from random import SystemRandom
 
 except ImportError:
@@ -71,6 +73,7 @@ else:
 
 
 try:
+    # noinspection PyUnresolvedReferences
     from .kiss import JKiss
 
 except ImportError:
@@ -93,6 +96,7 @@ else:
 
 
 try:
+    # noinspection PyUnresolvedReferences
     from .getrandom import URandom
 
 except ImportError:
@@ -112,6 +116,7 @@ else:
 
 
 try:
+    # noinspection PyUnresolvedReferences
     from .getrandom import DevRandom
 
 except ImportError:
@@ -133,6 +138,7 @@ else:
 
 
 try:
+    # noinspection PyUnresolvedReferences
     from .rdrandseed import RdRand
 
 except ImportError:
@@ -154,6 +160,7 @@ else:
 
 
 try:
+    # noinspection PyUnresolvedReferences
     from .rdrandseed import RdSeed
 
 except ImportError:
