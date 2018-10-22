@@ -46,11 +46,11 @@ Or you can peruse the list of providers and select one out of those
 (possibly filtering the list first):
 
 ```python3
-from randomness import PROVIDERS, ProviderFlag
+from randomness import PROVIDERS, Flag
 
 # filter randomness providers
 my_providers = [provider for provider in PROVIDERS
-                if provider.flags & ProviderFlag.NEVER_BLOCKING]
+                if provider.flags & Flag.NEVER_BLOCKING]
 
 # dump provider names
 for provider in my_providers:

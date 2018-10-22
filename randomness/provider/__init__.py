@@ -10,7 +10,7 @@ import random as _random
 from collections import namedtuple as _namedtuple
 
 
-class ProviderFlag(_enum.Flag):
+class Flag(_enum.Flag):
     FULLY_DETERMINISTIC = PSEUDORANDOM = PSEUDO_RANDOM = PRNG = _enum.auto()
     NONDETERMINISTIC = NON_DETERMINISTIC = TRULY_RANDOM = TRNG = _enum.auto()
     NEVER_BLOCKING = NONBLOCKING = NON_BLOCKING = _enum.auto()
@@ -31,20 +31,21 @@ PROVIDERS = [
             name='mersenne_twister',
             cls=_random.Random,
             flags=(
-                    ProviderFlag.FULLY_DETERMINISTIC |
-                    ProviderFlag.NEVER_BLOCKING |
-                    ProviderFlag.CLONEABLE |
-                    ProviderFlag.SEEDABLE |
-                    ProviderFlag.FAST
+                    Flag.FULLY_DETERMINISTIC |
+                    Flag.NEVER_BLOCKING |
+                    Flag.CLONEABLE |
+                    Flag.SEEDABLE |
+                    Flag.FAST
             ),
     ),
     _Provider(
             precedence=9,
             name='system',
             cls=_random.SystemRandom,
-            flags=ProviderFlag(0),
+            flags=Flag(0),
     ),
 ]
+
 
 try:
     # noinspection PyStatementEffect
@@ -113,7 +114,7 @@ else:
                 name='urandom',
                 cls=URandom,
                 flags=(
-                        ProviderFlag.CRYPTOGRAPHICALLY_SECURE
+                        Flag.CRYPTOGRAPHICALLY_SECURE
                 ),
         ),
     ]
@@ -137,9 +138,9 @@ else:
                     name='random',
                     cls=Random,
                     flags=(
-                            ProviderFlag.NONDETERMINISTIC |
-                            ProviderFlag.CRYPTOGRAPHICALLY_SECURE |
-                            ProviderFlag.CRYPTOGRAPHICALLY_STRONG
+                            Flag.NONDETERMINISTIC |
+                            Flag.CRYPTOGRAPHICALLY_SECURE |
+                            Flag.CRYPTOGRAPHICALLY_STRONG
                     ),
             ),
         ]
@@ -158,9 +159,9 @@ else:
                 name='rdrand',
                 cls=_rdrand.RdRandom,
                 flags=(
-                        ProviderFlag.NEVER_BLOCKING |
-                        ProviderFlag.FAST |
-                        ProviderFlag.CRYPTOGRAPHICALLY_SECURE
+                        Flag.NEVER_BLOCKING |
+                        Flag.FAST |
+                        Flag.CRYPTOGRAPHICALLY_SECURE
                 ),
         )]
 
@@ -170,10 +171,10 @@ else:
                 name='rdseed',
                 cls=_rdrand.RdSeedom,
                 flags=(
-                        ProviderFlag.NONDETERMINISTIC |
-                        ProviderFlag.NEVER_BLOCKING |
-                        ProviderFlag.CRYPTOGRAPHICALLY_SECURE |
-                        ProviderFlag.CRYPTOGRAPHICALLY_STRONG
+                        Flag.NONDETERMINISTIC |
+                        Flag.NEVER_BLOCKING |
+                        Flag.CRYPTOGRAPHICALLY_SECURE |
+                        Flag.CRYPTOGRAPHICALLY_STRONG
                 ),
         )]
 
