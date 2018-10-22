@@ -67,6 +67,26 @@ else:
 
 
 try:
+    from .kiss import JKiss
+
+except ImportError:
+    pass
+
+else:
+    PROVIDERS += [_Provider(
+            precedence=-51,
+            name='jkiss',
+            cls=JKiss,
+            flags=(
+                    Flag.FULLY_DETERMINISTIC |
+                    Flag.NEVER_BLOCKING |
+                    Flag.CLONEABLE |
+                    Flag.SEEDABLE
+            ),
+    )]
+
+
+try:
     from .getrandom import URandom
 
 except ImportError:
