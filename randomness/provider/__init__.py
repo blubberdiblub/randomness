@@ -99,16 +99,14 @@ except ImportError:
     pass
 
 else:
-    PROVIDERS += [
-        _Provider(
-                precedence=49,
-                name='urandom',
-                cls=URandom,
-                flags=(
-                        Flag.CRYPTOGRAPHICALLY_SECURE
-                ),
-        ),
-    ]
+    PROVIDERS += [_Provider(
+            precedence=49,
+            name='urandom',
+            cls=URandom,
+            flags=(
+                    Flag.CRYPTOGRAPHICALLY_SECURE
+            ),
+    )]
 
     __all__ += ['URandom']
 
@@ -120,18 +118,16 @@ except ImportError:
     pass
 
 else:
-    PROVIDERS += [
-        _Provider(
-                precedence=99,
-                name='dev_random',
-                cls=DevRandom,
-                flags=(
-                        Flag.NONDETERMINISTIC |
-                        Flag.CRYPTOGRAPHICALLY_SECURE |
-                        Flag.CRYPTOGRAPHICALLY_STRONG
-                ),
-        ),
-    ]
+    PROVIDERS += [_Provider(
+            precedence=99,
+            name='dev_random',
+            cls=DevRandom,
+            flags=(
+                    Flag.NONDETERMINISTIC |
+                    Flag.CRYPTOGRAPHICALLY_SECURE |
+                    Flag.CRYPTOGRAPHICALLY_STRONG
+            ),
+    )]
 
     __all__ += ['DevRandom']
 
