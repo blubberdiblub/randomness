@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import Any as _Any
-
 import enum as _enum
-import os as _os
-import random as _random
 
 from collections import namedtuple as _namedtuple
 
@@ -25,11 +21,26 @@ class Flag(_enum.Flag):
 
 _Provider = _namedtuple('Provider', ['precedence', 'name', 'cls', 'flags'])
 
-PROVIDERS = [
-    _Provider(
+PROVIDERS = []
+
+
+__all__ = [
+    'Flag',
+    'PROVIDERS',
+]
+
+
+try:
+    from random import Random as MersenneTwister
+
+except ImportError:
+    pass
+
+else:
+    PROVIDERS += [_Provider(
             precedence=-11,
             name='mersenne_twister',
-            cls=_random.Random,
+            cls=MersenneTwister,
             flags=(
                     Flag.FULLY_DETERMINISTIC |
                     Flag.NEVER_BLOCKING |
@@ -37,20 +48,22 @@ PROVIDERS = [
                     Flag.SEEDABLE |
                     Flag.FAST
             ),
-    ),
-    _Provider(
+    )]
+
+
+try:
+    from random import SystemRandom
+
+except ImportError:
+    pass
+
+else:
+    PROVIDERS += [_Provider(
             precedence=9,
             name='system',
-            cls=_random.SystemRandom,
+            cls=SystemRandom,
             flags=Flag(0),
-    ),
-]
-
-
-__all__ = [
-    'Flag',
-    'PROVIDERS',
-]
+    )]
 
 
 try:
