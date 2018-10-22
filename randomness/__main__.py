@@ -3,7 +3,7 @@
 
 from typing import Iterable as _Iterable
 
-from .providers import PROVIDERS, _Provider
+from .provider import PROVIDERS, _Provider
 
 
 def _test(providers: _Iterable[_Provider]) -> None:

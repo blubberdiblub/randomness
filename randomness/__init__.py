@@ -7,7 +7,7 @@ try:
 except ImportError:
     __version__ = 'unknown'
 
-from .providers import ProviderFlag, PROVIDERS
+from .provider import ProviderFlag, PROVIDERS
 
 
 __all__ = [
