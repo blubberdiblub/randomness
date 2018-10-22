@@ -21,7 +21,7 @@ def randomness_source(request):
     return request.param.cls()
 
 
-def test_all_bits_take_both_states(randomness_source):
+def test_bits_take_on_both_states(randomness_source):
 
     """Verify that there are no stuck bits.
 
